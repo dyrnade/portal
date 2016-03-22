@@ -1,0 +1,13 @@
+{% extends 'main_yardim_alan.html' %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+{% load i18n %}
+
+
+{% block reserved_items %}
+    {% for material in reserved_materials %}
+        {% if material.reserved_by == request.user and material.status == 1 %}
+            {{ material.material_name }}
+        {% endif %}
+    {% endfor %}
+{% endblock %}

@@ -1,55 +1,36 @@
 from __future__ import absolute_import
 from django.shortcuts import render
 from django.views import generic
-from .models import Post
-from .forms import RegistrationsForm, EditPostForm, CreatePostForm, LoginForm, PostConfirmationForm
-from django.contrib.auth.models import User
-from .models import MyUser
-from django.http import HttpResponseRedirect,HttpResponse,Http404
-from  django.template.context_processors import csrf
+from .models import Post, Material
+from .forms import RegistrationsForm, EditPostForm, CreatePostForm, LoginForm, MyUserProfileForm
+from django.http import HttpResponseRedirect,HttpResponse
 from django.contrib.auth import authenticate, login
 from django.core.urlresolvers import reverse_lazy
-
-
-
-
 
 # Create your viewsi here.
 
 
 class IndexView(generic.ListView):
-    # qlist = Post.objects.all()
-    # context = { "postList" : qlist }
-    # return render(request, "webportal/index.html", context)
     template_name = 'index.html'
     context_object_name = 'postList'
     paginate_by = 2
     def get_queryset(self):
         return Post.objects.all()
 
-# @login_required(login_url='/accounts/login')
 class DetailView(generic.DetailView):
-    # qlist = get_object_or_404(Post, id=id)
-    # context = { "postList" : qlist }
-    # return render(request, "webportal/detail.html", context)
-    # if not MyUser.is_authenticated():
-    #     raise Http404
-    # if not MyUser.is_authenticated():
-    #     raise  Http404
     model = Post
     template_name = 'detail.html'
 
-# class SignUpView(generic.CreateView):
-#     form_class = RegistrationForm
-#     model = MyUser
-#     template_name = 'register.html'
-#
-#     def form_valid(self, form):
-#         obj = form.save(commit=False)
-#         obj.set_password(MyUser.objects.make_random_password())
-#         obj.email = self.request.cleaned_data.get("email")
-#         obj.city = self.request.cleaned_data.get("city")
-#         obj.save()
+class MaterialView(generic.ListView):
+    template_name = 'main_yardim_alan.html'
+    context_object_name = 'materialList'
+    paginate_by = 4
+    def get_queryset(self):
+        return Material.objects.all()
+
+class MaterialDetailView(generic.DetailView):
+    model = Material
+    template_name = 'malzeme.html'
 
 def register(request):
     if request.method == "POST":
@@ -64,27 +45,6 @@ def register(request):
         form = RegistrationsForm  # if the user accessed the register url directly, just display the empty form
     return render(request, 'kayit.html', {'form': form})
 
-# def login(request):
-#
-#     email = request.POST['login_email']
-#     password = request.POST['login_password']
-#     user = authenticate(email=email,password=password)
-#     if request.method == "POST":
-#         form = LoginForm(request.POST)
-#         if form.is_valid():
-#             if user is not None:
-#                 if user.is_active:
-#                     login(request, user)
-#                     return HttpResponseRedirect('/comodo/')
-#                 else:
-#                     return HttpResponse(str("Lutfen Kayit olunuz"))
-#             else:
-#                 return Http404
-#         else:
-#                 return HttpResponse(str((form.errors)))
-#     else:
-#         form = LoginForm
-#     return render(request, 'kayit.html', {'form': form})
 
 class LoginView(generic.FormView):
     form_class = LoginForm
@@ -103,50 +63,41 @@ class LoginView(generic.FormView):
         else:
             return self.form_invalid(form)
 
-#
-#     def form_valid(self, form):
-#         obj = form.save(commit=False)
-#         obj.set_password(self.POST.get('password'))
 
-# def register(request):
-#
-#     form = RegistrationForm(request.POST or None)
-#
+# def post_create(request):
+#     form = CreatePostForm(request.POST)
+#     form.Meta.model.user = "g@g.com"
+#     form.Meta.model.is_accomplished = True
 #     if form.is_valid():
-#         user = form.save()
-#         # email = form.cleaned_data.get("email")
-#         user.set_password(user.password)
-#         user.save()
+#         instance = form.save(commit=False)
+#         instance.save()
+#     else:
+#         print str(form.errors)
 #
 #     context = {
 #         "form" : form,
 #     }
-#
-#     return render(request, "register.html",context)
-
-
-    # if request.method == 'GET':
-    #     form = RegistrationForm
-    # else:
-    #     form = RegistrationForm(request.POST)
-    #
-    #     if form.is_valid():
-    #         form.save()
-    #         return HttpResponseRedirect('/comodo/')
-    # args = {}
-    # args.update(csrf(request))
-    # args['form'] = RegistrationForm()
-    # print args
-    # return render(request, 'register.html', args)
-
+#     return render(request, 'main_yardim_alan.html', context)
 class CreatePostView(generic.CreateView):
     form_class = CreatePostForm
     model = Post
-    template_name = 'post_create.html'
-    success_url = '/comodo'
+    template_name = 'hikaye.html'
+
+    def form_valid(self, form):
+        instance = form.save(commit=False)
+        instance.user = self.request.user
+        instance.save()
+        return HttpResponseRedirect('/comodo/yardim/')
+
 
 class EditPostView(generic.UpdateView):
     form_class = EditPostForm
     model = Post
     template_name = 'post_edit.html'
-    success_url = '/comodo'
+
+class ReservedItemsView(generic.ListView):
+    template_name = 'reserved_by.html'
+    context_object_name = 'reserved_materials'
+    model = Material
+    def get_queryset(self):
+        return Material.objects.all()

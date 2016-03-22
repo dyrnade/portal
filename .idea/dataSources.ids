@@ -34,22 +34,15 @@
       <column name="id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
       <column name="material_name" sqlType="VARCHAR(120)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
       <column name="material_message" sqlType="TEXT" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="material_image" sqlType="VARCHAR(100)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
       <column name="status" sqlType="SMALLINT UNSIGNED" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <column name="reserved_by_id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
       <column name="user_id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
       <primary-key columns="id"/>
       <foreign-key name="#FAKE_comodo_material_1" columns="user_id" ref-table="comodo_myuser" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_comodo_material_2" columns="reserved_by_id" ref-table="comodo_myuser" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
       <index name="comodo_material_e8701ad4" unique="true" columns="user_id"/>
-    </table>
-    <table name="comodo_material_reserved_by" schema="" catalog="" type="TABLE">
-      <column name="id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
-      <column name="material_id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
-      <column name="myuser_id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
-      <primary-key columns="id"/>
-      <foreign-key name="#FAKE_comodo_material_reserved_by_1" columns="myuser_id" ref-table="comodo_myuser" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
-      <foreign-key name="#FAKE_comodo_material_reserved_by_2" columns="material_id" ref-table="comodo_material" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
-      <index name="comodo_material_reserved_by_8b14fb18" unique="true" columns="myuser_id"/>
-      <index name="comodo_material_reserved_by_eb4b9aaa" unique="true" columns="material_id"/>
-      <index name="comodo_material_reserved_by_material_id_7c3713e4_uniq" unique="true" columns="material_id,myuser_id"/>
+      <index name="comodo_material_eb29ccf0" unique="true" columns="reserved_by_id"/>
     </table>
     <table name="comodo_myuser" schema="" catalog="" type="TABLE">
       <column name="id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
@@ -57,8 +50,8 @@
       <column name="last_login" sqlType="DATETIME" precision="0" scale="-1" nullable="true" jdbcType="12"/>
       <column name="username" sqlType="VARCHAR(255)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
       <column name="email" sqlType="VARCHAR(255)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
-      <column name="user_status" sqlType="SMALLINT UNSIGNED" precision="0" scale="-1" nullable="false" jdbcType="4"/>
       <column name="city" sqlType="VARCHAR(60)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
+      <column name="user_status" sqlType="SMALLINT UNSIGNED" precision="0" scale="-1" nullable="false" jdbcType="4"/>
       <column name="is_active" sqlType="BOOL" precision="0" scale="-1" nullable="false" jdbcType="4"/>
       <column name="is_admin" sqlType="BOOL" precision="0" scale="-1" nullable="false" jdbcType="4"/>
       <primary-key columns="id"/>

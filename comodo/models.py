@@ -50,7 +50,6 @@ class MyUser(AbstractBaseUser):
     )
 
     USER_STATUS = ((1, 'volunteer'), (2, 'recipant'))
-    USER_STATUS_DICT = dict((v, k) for k, v in USER_STATUS)
     city = models.CharField(max_length=60)
     user_status = models.PositiveSmallIntegerField(choices=USER_STATUS)
 
@@ -75,7 +74,7 @@ class MyUser(AbstractBaseUser):
     def __str__(self):              # __unicode__ on Python 2
         return self.email
 
-    def has_perms(self, perm, obj=None):
+    def has_perm(self, perm, obj=None):
         "Does the user have a specific permission?"
         # Simplest possible answer: Yes, always
         return True
@@ -127,8 +126,8 @@ class Material(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     material_name = models.CharField(max_length=120)
     material_message = models.TextField()
-    reserved_by = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='material_reserved_by')
+    material_image = models.ImageField()
+    reserved_by = models.ForeignKey(settings.AUTH_USER_MODEL,related_name='material_reserved_by')
     ORDER_STATUS = ((0, 'not_rezerved'), (1, 'rezerved'), (2, 'given'))
-    ORDER_STATUS_DICT = dict((v, k) for k, v in ORDER_STATUS)
     status = models.PositiveSmallIntegerField(choices=ORDER_STATUS)
 

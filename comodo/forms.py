@@ -18,62 +18,12 @@ class RegistrationsForm(RegistrationForm):
         model = MyUser
         fields = ('username','email', 'city','user_status',)
 
-        # def __init__(self, *args, **kwargs):
-        #     super(RegistrationForm, self).__init__(*args, **kwargs)
-
-            # self.helper = FormHelper()
-            # self.helper.field_class = 'form-control'
-            # self.helper.layout = Layout(
-            #     # 'username',
-            #     # 'password1',
-            #     # 'password2',
-            #     # 'email',
-            #     # 'city',
-            #     #
-            #     #
-            #     #  InlineField('username', placeholder="Kullanici Adi",style="text-align: center;"),
-            #     # InlineField('password1', placeholder="Confirm Password",style="text-align: center;"),
-            #     # InlineField('password2', placeholder="Password",style="text-align: center;"),
-            #     # InlineField('email', placeholder="Email",style="text-align: center;"),
-            #     # InlineField('city', placeholder="Sehir",style="text-align: center;"),
-            #     # ButtonHolder(
-            #     #     Submit('register', 'Kayit Ol', css_class='btn btn-primary')
-            #     # ),
-            #
-            # )
-
-    # def save(self, commit=True):
-    #     user = super(RegistrationForm, self).save(commit=False)
-    #     user.email = self.cleaned_data['email']
-    #     user.city = self.cleaned_data['city']
-    #
-    #     if commit:
-    #         user.save()
-    #     return user
-
-
-    # address = forms.CharField(widget=forms.Textarea)
-    # phone_number = forms.IntegerField()
-    #
-    # def __init__(self, *args, **kwargs):
-    #     super(RegistrationForm, self).__init__(*args, **kwargs)
-    #
-    #     self.helper = FormHelper()
-    #     self.helper.layout = Layout(
-    #         'username',
-    #         'password1',
-    #         'password2',
-    #         'email',
-    #         'city',
-    #         # ButtonHolder(
-    #         #     Submit('register', 'Kayit Ol', css_class='btn-primary')
-    #         # )
-    #     )
-
-class PostConfirmationForm(forms.ModelForm):
+class MyUserProfileForm(forms.ModelForm):
     class Meta:
-        model = PostConfirmation
-        fields = ('added_by', 'approved_by')
+        model = MyUser
+        fields = ('username', 'password','email','city',)
+
+
 
 class LoginForm(AuthenticationForm):
     username = forms.EmailField(required=True)
@@ -85,7 +35,7 @@ class LoginForm(AuthenticationForm):
 class CreatePostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ('user','title', 'message','is_accomplished',)
+        fields = ('title', 'message',)
     # user = forms.IntegerField(required=False, widget=forms.HiddenInput())
 
 
@@ -94,10 +44,10 @@ class CreatePostForm(forms.ModelForm):
 
         self.helper = FormHelper()
         self.helper.layout = Layout(
-            'user',
+            # 'user',
             'title',
             'message',
-            'is_accomplished',
+            # 'is_accomplished',
 
             ButtonHolder(
                 Submit('post_edit', 'Done', css_class='btn-success')
