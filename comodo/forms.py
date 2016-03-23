@@ -4,7 +4,7 @@ from django import forms
 
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, ButtonHolder, Submit, Div
-from .models import MyUser, Post,PostConfirmation
+from .models import MyUser, Post,PostConfirmation, Material
 from registration.forms import RegistrationForm
 from django.contrib.auth.forms import AuthenticationForm
 
@@ -38,21 +38,26 @@ class CreatePostForm(forms.ModelForm):
         fields = ('title', 'message',)
     # user = forms.IntegerField(required=False, widget=forms.HiddenInput())
 
+class CreateMaterialForm(forms.ModelForm):
+    class Meta:
+        model = Material
+        fields = ('material_name', 'material_message','material_image',)
+
 
     def __init__(self, *args, **kwargs):
-        super(CreatePostForm, self).__init__(*args, **kwargs)
+        super(CreateMaterialForm, self).__init__(*args, **kwargs)
 
         self.helper = FormHelper()
         self.helper.layout = Layout(
-            # 'user',
-            'title',
-            'message',
-            # 'is_accomplished',
+            'material_name',
+            'material_message',
+            'material_image',
 
             ButtonHolder(
                 Submit('post_edit', 'Done', css_class='btn-success')
             )
         )
+
 
 class EditPostForm(forms.ModelForm):
     class Meta:

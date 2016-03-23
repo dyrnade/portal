@@ -2,7 +2,7 @@ from __future__ import absolute_import
 from django.shortcuts import render
 from django.views import generic
 from .models import Post, Material
-from .forms import RegistrationsForm, EditPostForm, CreatePostForm, LoginForm, MyUserProfileForm
+from .forms import RegistrationsForm, EditPostForm, CreatePostForm, LoginForm, MyUserProfileForm, CreateMaterialForm
 from django.http import HttpResponseRedirect,HttpResponse
 from django.contrib.auth import authenticate, login
 from django.core.urlresolvers import reverse_lazy
@@ -24,13 +24,32 @@ class DetailView(generic.DetailView):
 class MaterialView(generic.ListView):
     template_name = 'main_yardim_alan.html'
     context_object_name = 'materialList'
-    paginate_by = 4
+    paginate_by = 10
     def get_queryset(self):
         return Material.objects.all()
+
+class UserMaterialView(generic.ListView):
+    template_name = 'malzeme_listesi.html'
+    context_object_name = 'user_materialList'
+    def get_queryset(self):
+        return Material.objects.all().prefetch_related('user')
+
 
 class MaterialDetailView(generic.DetailView):
     model = Material
     template_name = 'malzeme.html'
+
+class MaterialStatusUpdateView(generic.UpdateView):
+    model = Material
+    template_name = 'malzeme.html'
+    fields = []
+
+    def form_valid(self,form):
+        instance = form.save(commit=False)
+        instance.status = 1
+        instance.save()
+        return HttpResponseRedirect('/comodo/yardim/')
+
 
 def register(request):
     if request.method == "POST":
@@ -81,7 +100,7 @@ class LoginView(generic.FormView):
 class CreatePostView(generic.CreateView):
     form_class = CreatePostForm
     model = Post
-    template_name = 'hikaye.html'
+    template_name = 'post_create.html'
 
     def form_valid(self, form):
         instance = form.save(commit=False)
@@ -89,6 +108,30 @@ class CreatePostView(generic.CreateView):
         instance.save()
         return HttpResponseRedirect('/comodo/yardim/')
 
+# class CreateMaterialView(generic.CreateView):
+#     form_class = CreateMaterialForm
+#     model = Material
+#     template_name = 'material_create.html'
+#
+#     def form_valid(self, form):
+#         instance = form.save(commit=False)
+#         instance.user = self.request.user
+#         instance.status = 0
+#         instance.save()
+#         return HttpResponseRedirect('/comodo/')
+
+def upload_file(request):
+    if request.method == 'POST':
+        form = CreateMaterialForm(request.POST, request.FILES)
+        if form.is_valid():
+            instance = Material(material_name=request.POST['material_name'],material_message=request.POST['material_message'],material_image=request.FILES['material_image'])
+            instance.user = request.user
+            instance.status = 0
+            instance.save()
+            return HttpResponseRedirect('/comodo/')
+    else:
+        form = CreateMaterialForm()
+    return render(request, 'material_create.html', {'form': form})
 
 class EditPostView(generic.UpdateView):
     form_class = EditPostForm
@@ -98,6 +141,13 @@ class EditPostView(generic.UpdateView):
 class ReservedItemsView(generic.ListView):
     template_name = 'reserved_by.html'
     context_object_name = 'reserved_materials'
+    model = Material
+    def get_queryset(self):
+        return Material.objects.all()
+
+class GivenItemsView(generic.ListView):
+    template_name = 'given_material.html'
+    context_object_name = 'given_materials'
     model = Material
     def get_queryset(self):
         return Material.objects.all()

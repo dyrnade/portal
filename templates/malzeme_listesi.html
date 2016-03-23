@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% block user_malzeme_listesi %}
+       <div class="container">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Teslim Alinan Malzeme Adi</th>
+                <th>Malzeme Sahibi</th>
+                <th>Malzeme Sayfasi</th>
+            </tr>
+            </thead>
+            {% for material in user_materialList %}
+                {% if material.user == request.user and not material.status == 2 %}
+
+                    <tbody>
+                    <tr class="danger">
+                        <td class="text-primary">{{ material.material_name }}</td>
+                        <td class="text-primary">{{ material.user }}</td>
+                        <td><a href="{% url 'comodo:yardim_detail' material.id %}" class="btn btn-danger btn-block"
+                               role="button">Tikla</a></td>
+                    </tr>
+                    </tbody>
+
+                {% endif %}
+            {% endfor %}
+        </table>
+    </div>
+
+{% endblock %}

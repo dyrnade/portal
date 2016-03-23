@@ -127,7 +127,8 @@ class Material(models.Model):
     material_name = models.CharField(max_length=120)
     material_message = models.TextField()
     material_image = models.ImageField()
-    reserved_by = models.ForeignKey(settings.AUTH_USER_MODEL,related_name='material_reserved_by')
+    reserved_by = models.ForeignKey(settings.AUTH_USER_MODEL,blank=True,null=True,related_name='material_reserved_by')
+    given_to = models.ForeignKey(settings.AUTH_USER_MODEL,blank=True,null=True,related_name='material_given_to')
     ORDER_STATUS = ((0, 'not_rezerved'), (1, 'rezerved'), (2, 'given'))
     status = models.PositiveSmallIntegerField(choices=ORDER_STATUS)
 
