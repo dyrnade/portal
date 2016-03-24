@@ -82,31 +82,31 @@
     <div class="col-md-8">
         <div class="jumbotron">
 
-        <a href="{% url 'comodo:user_material_list' %}"
-                                         class="btn btn-success btn-lg btn-block" role="button">Malzeme Listesi</a>
-        <a href="{% url 'comodo:material_create' %}"
-                                         class="btn btn-info btn-lg btn-block" role="button">Malzeme Ekle</a>
-            <br>
+{#        <a href="{% url 'comodo:user_material_list' %}"#}
+{#                                         class="btn btn-success btn-lg btn-block" role="button">Malzeme Listesi</a>#}
+{#        <a href="{% url 'comodo:material_create' %}"#}
+{#                                         class="btn btn-info btn-lg btn-block" role="button">Malzeme Ekle</a>#}
+{#            <br>#}
 
-            <div id="malzemelerim" class="collapse" role="dialog">
-                <div class="modal-dialog">
-
-                    <!-- Modal content-->
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            <h4 class="modal-title"><b>Malzemelerim</b></h4>
-                        </div>
-                        <div class="modal-body">
+{#            <div id="malzemelerim" class="collapse" role="dialog">#}
+{#                <div class="modal-dialog">#}
+{##}
+{#                    <!-- Modal content-->#}
+{#                    <div class="modal-content">#}
+{#                        <div class="modal-header">#}
+{#                            <button type="button" class="close" data-dismiss="modal">&times;</button>#}
+{#                            <h4 class="modal-title"><b>Malzemelerim</b></h4>#}
+{#                        </div>#}
+{#                        <div class="modal-body">#}
 {#                        {% block user_malzeme_listesi %}{% endblock %}#}
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Kapat</button>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
+{#                        </div>#}
+{#                        <div class="modal-footer">#}
+{#                            <button type="button" class="btn btn-default" data-dismiss="modal">Kapat</button>#}
+{#                        </div>#}
+{#                    </div>#}
+{##}
+{#                </div>#}
+{#            </div>#}
 
             {% block material_add %}{% endblock %}
 

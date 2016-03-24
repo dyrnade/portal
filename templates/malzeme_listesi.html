@@ -3,6 +3,11 @@
 {% load i18n %}
 
 {% block user_malzeme_listesi %}
+            <a href="{% url 'comodo:user_material_list' %}"
+                                         class="btn btn-success btn-lg btn-block" role="button">Malzeme Listesi</a>
+        <a href="{% url 'comodo:material_create' %}"
+                                         class="btn btn-info btn-lg btn-block" role="button">Malzeme Ekle</a>
+
        <div class="container">
         <table class="table">
             <thead>
