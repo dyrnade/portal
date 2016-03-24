@@ -1,45 +1,73 @@
 from __future__ import absolute_import
 from django.shortcuts import render
 from django.views import generic
-from .models import Post, Material
+from .models import Post, Material, MyUser
 from .forms import RegistrationsForm, EditPostForm, CreatePostForm, LoginForm, MyUserProfileForm, CreateMaterialForm
-from django.http import HttpResponseRedirect,HttpResponse
+from django.http import HttpResponseRedirect,HttpResponse, Http404
 from django.contrib.auth import authenticate, login
 from django.core.urlresolvers import reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.core.urlresolvers import reverse
 
-# Create your viewsi here.
 
+# Permissons
 
-class IndexView(generic.ListView):
+class VolunteerTestMixin(UserPassesTestMixin):
+    # If user_status volunteer, show the page. ====> UserPassesTestMixin <=====
+    def test_func(self):
+        if self.request.user.user_status == 1:
+            raise Http404
+        else:
+            return True
+
+class RecipantTestMixin(UserPassesTestMixin):
+    # If user_status volunteer, show the page. ====> UserPassesTestMixin <=====
+    def test_func(self):
+        if self.request.user.user_status == 2:
+            raise Http404
+        else:
+            return True
+
+class IndexView(LoginRequiredMixin, RecipantTestMixin, generic.ListView):
     template_name = 'index.html'
     context_object_name = 'postList'
-    paginate_by = 2
+    paginate_by = 4
+
     def get_queryset(self):
         return Post.objects.all()
 
-class DetailView(generic.DetailView):
+class DetailView(LoginRequiredMixin,generic.DetailView):
     model = Post
     template_name = 'detail.html'
 
-class MaterialView(generic.ListView):
+class MaterialView(LoginRequiredMixin, VolunteerTestMixin,generic.ListView):
     template_name = 'main_yardim_alan.html'
     context_object_name = 'materialList'
     paginate_by = 10
+
+    # If user_status recipant, show the page. ====> UserPassesTestMixin <=====
+    def test_func(self):
+        if self.request.user.user_status == 1:
+            raise Http404
+        else:
+            return True
+
     def get_queryset(self):
         return Material.objects.all()
 
-class UserMaterialView(generic.ListView):
+class UserMaterialView(LoginRequiredMixin,generic.ListView):
     template_name = 'malzeme_listesi.html'
     context_object_name = 'user_materialList'
     def get_queryset(self):
         return Material.objects.all().prefetch_related('user')
 
 
-class MaterialDetailView(generic.DetailView):
+class MaterialDetailView(LoginRequiredMixin,generic.DetailView):
     model = Material
     template_name = 'malzeme.html'
 
-class MaterialStatusUpdateView(generic.UpdateView):
+class MaterialStatusUpdateView(LoginRequiredMixin,generic.UpdateView):
     model = Material
     template_name = 'malzeme.html'
     fields = []
@@ -47,9 +75,9 @@ class MaterialStatusUpdateView(generic.UpdateView):
     def form_valid(self,form):
         instance = form.save(commit=False)
         instance.status = 1
+        instance.reserved_by = self.request.user
         instance.save()
         return HttpResponseRedirect('/comodo/yardim/')
-
 
 def register(request):
     if request.method == "POST":
@@ -59,45 +87,30 @@ def register(request):
             print("Form is valid")
         else:
             return HttpResponse(str((form.errors)))
-        return HttpResponseRedirect('/comodo/')  # go to some other page if successfully saved
+        return HttpResponseRedirect('/comodo/register/')  # go to some other page if successfully saved
     else:
         form = RegistrationsForm  # if the user accessed the register url directly, just display the empty form
     return render(request, 'kayit.html', {'form': form})
 
 
-class LoginView(generic.FormView):
-    form_class = LoginForm
-    success_url = reverse_lazy('index')
-    template_name = 'kayit.html'
-
-    def form_valid(self, form):
-        form.cleaned_data
-        username = form.cleaned_data['username']
-        password = form.cleaned_data['password']
-        user = authenticate(username=username, password=password)
-
-        if user is not None and user.is_active:
-            login(self.request, user)
-            return super(LoginView, self).form_valid(form)
-        else:
-            return self.form_invalid(form)
-
-
-# def post_create(request):
-#     form = CreatePostForm(request.POST)
-#     form.Meta.model.user = "g@g.com"
-#     form.Meta.model.is_accomplished = True
-#     if form.is_valid():
-#         instance = form.save(commit=False)
-#         instance.save()
-#     else:
-#         print str(form.errors)
+# class LoginView(LoginRequiredMixin,generic.FormView):
+#     form_class = LoginForm
+#     success_url = reverse_lazy('index')
+#     template_name = 'kayit.html'
 #
-#     context = {
-#         "form" : form,
-#     }
-#     return render(request, 'main_yardim_alan.html', context)
-class CreatePostView(generic.CreateView):
+#     def form_valid(self, form):
+#         form.cleaned_data
+#         username = form.cleaned_data['username']
+#         password = form.cleaned_data['password']
+#         user = authenticate(username=username, password=password)
+#
+#         if user is not None and user.is_active:
+#             login(self.request, user)
+#             return super(LoginView, self).form_valid(form)
+#         else:
+#             return self.form_invalid(form)
+
+class CreatePostView(LoginRequiredMixin,generic.CreateView):
     form_class = CreatePostForm
     model = Post
     template_name = 'post_create.html'
@@ -120,6 +133,7 @@ class CreatePostView(generic.CreateView):
 #         instance.save()
 #         return HttpResponseRedirect('/comodo/')
 
+@login_required
 def upload_file(request):
     if request.method == 'POST':
         form = CreateMaterialForm(request.POST, request.FILES)
@@ -133,21 +147,38 @@ def upload_file(request):
         form = CreateMaterialForm()
     return render(request, 'material_create.html', {'form': form})
 
-class EditPostView(generic.UpdateView):
+class EditPostView(LoginRequiredMixin,generic.UpdateView):
     form_class = EditPostForm
     model = Post
     template_name = 'post_edit.html'
 
-class ReservedItemsView(generic.ListView):
+class ReservedItemsView(LoginRequiredMixin,generic.ListView):
     template_name = 'reserved_by.html'
     context_object_name = 'reserved_materials'
     model = Material
     def get_queryset(self):
         return Material.objects.all()
 
-class GivenItemsView(generic.ListView):
+class GivenItemsView(LoginRequiredMixin,generic.ListView):
     template_name = 'given_material.html'
     context_object_name = 'given_materials'
     model = Material
     def get_queryset(self):
         return Material.objects.all()
+
+class ProfileView(LoginRequiredMixin,generic.ListView):
+    template_name = 'profilim.html'
+    context_object_name = 'profil_bilgisi'
+    model = MyUser
+    def get_queryset(self):
+        return MyUser.objects.all()
+
+@login_required
+def redirecting(request):
+    if request.user.user_status == 1:
+        return HttpResponseRedirect('/comodo/')
+    else:
+        return HttpResponseRedirect('/comodo/yardim/')
+
+
+

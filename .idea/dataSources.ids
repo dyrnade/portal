@@ -36,13 +36,16 @@
       <column name="material_message" sqlType="TEXT" precision="0" scale="-1" nullable="false" jdbcType="12"/>
       <column name="material_image" sqlType="VARCHAR(100)" precision="0" scale="-1" nullable="false" jdbcType="12"/>
       <column name="status" sqlType="SMALLINT UNSIGNED" precision="0" scale="-1" nullable="false" jdbcType="4"/>
-      <column name="reserved_by_id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <column name="given_to_id" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
       <column name="user_id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>
+      <column name="reserved_by_id" sqlType="INTEGER" precision="0" scale="-1" nullable="true" jdbcType="4"/>
       <primary-key columns="id"/>
-      <foreign-key name="#FAKE_comodo_material_1" columns="user_id" ref-table="comodo_myuser" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
-      <foreign-key name="#FAKE_comodo_material_2" columns="reserved_by_id" ref-table="comodo_myuser" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
-      <index name="comodo_material_e8701ad4" unique="true" columns="user_id"/>
+      <foreign-key name="#FAKE_comodo_material_1" columns="reserved_by_id" ref-table="comodo_myuser" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_comodo_material_2" columns="user_id" ref-table="comodo_myuser" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_comodo_material_3" columns="given_to_id" ref-table="comodo_myuser" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
       <index name="comodo_material_eb29ccf0" unique="true" columns="reserved_by_id"/>
+      <index name="comodo_material_e8701ad4" unique="true" columns="user_id"/>
+      <index name="comodo_material_ba68f45c" unique="true" columns="given_to_id"/>
     </table>
     <table name="comodo_myuser" schema="" catalog="" type="TABLE">
       <column name="id" sqlType="INTEGER" precision="0" scale="-1" nullable="false" jdbcType="4"/>

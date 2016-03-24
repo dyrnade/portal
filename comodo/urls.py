@@ -25,6 +25,8 @@ urlpatterns = [
     auth_views.login,
     {'template_name': 'kayit.html'},
     name='auth_login'),
+
+    url(r'^redirecting/$', views.redirecting),
     url(r'^logout/$',
     auth_views.logout,
     {'template_name': 'registration/logout.html'},

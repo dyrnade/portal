@@ -71,10 +71,11 @@
                 {#                <button type="submit" class="btn btn-success btn-lg btn-block">Rezerve Et</button>#}
 
                 <!--Rezerve edilmemisse buton aktif -->
-                {% if material.status == 0 and material.user.city == request.user.city %}
+                {% if material.status == 0 and material.user.city == request.user.city and request.user.user_status == 2%}
+
                     <button type="submit" class="btn btn-success active btn-lg  btn-block">Rezerve Et</button>
                     <!-- Rezerve edilmisse buton pasif -->
-                {% elif  material.status == 1 and material.user.city == request.user.city %}
+                {% elif  material.status == 1 and material.user.city == request.user.city and request.user.user_status == 2%}
                     <button type="button" class="btn btn-primary disabled btn-lg  btn-block">Rezerve Edildi
                     </button>
                 {% else %}

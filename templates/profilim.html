@@ -1,5 +1,6 @@
 <!-- Yardım Gönüllüsü main sayfasıdır-->
-
+{% load staticfiles %}
+{% load i18n %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,11 +8,17 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 	<title></title>
-	<link rel="stylesheet" type="text/css" href="../static/css/custom.css">
-	<link rel="stylesheet" type="text/css" href="../static/css/bootstrap.min.css">
+        <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/bootstrap-theme.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/bootstrap-theme.css' %}"/>
+    <script type="text/javascript" src="{% static 'js/jquery.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
+{#	<link rel="stylesheet" type="text/css" href="../static/css/custom.css">#}
+{#	<link rel="stylesheet" type="text/css" href="../static/css/bootstrap.min.css">#}
 	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
-	<script src="../static/js/jquery.js"></script>
-	<script src="../static/js/bootstrap.min.js"></script>
+{#	<script src="../static/js/jquery.js"></script>#}
+{#	<script src="../static/js/bootstrap.min.js"></script>#}
 </head>
 <body>
 	<!-- Header Bölümü -->
@@ -28,7 +35,7 @@
 	    <div class="collapse navbar-collapse" id="myNavbar">
 	      	<ul class="nav navbar-nav navbar-right">
        			<li class="dropdown">
-			        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user"></i> &nbsp;Kullanici Adi <span class="caret"></span></a>
+			        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user"></i> &nbsp;{{ request.user }} <span class="caret"></span></a>
 			        <ul class="dropdown-menu">
 				        <li><a href="profilim.html">Profilim</a></li>
 				       
@@ -46,41 +53,45 @@
 	<div class="well">
     <ul class="nav nav-tabs">
       <li class="active"><a href="#home" data-toggle="tab">Profilim</a></li>
-      <li><a href="#profile" data-toggle="tab">Parolam</a></li>
+      <li><a href="#profile" data-toggle="tab">Parofil Bilgileri</a></li>
     </ul>
     <div id="myTabContent" class="tab-content">
       <div class="tab-pane active in" id="home">
-        <form id="tab"><br>
+
+        {% for info in profil_bilgisi %}
+
+            {% if info.city == request.user.city %}
+           <label>Kullanici Adi: </label><label>{{ info.username }}</label>
+            {% endif %}
+
+        {% endfor %}
+
+      </div>
+      <div class="tab-pane fade" id="profile">
+
+
+          <form method="post" id="tab"><br>{% csrf_token %}
             <label>Kullanici Adiniz</label>
             <input type="text"  name="username" class="form-control"><br>
             <label>Soyadınız</label>
-            <input type="text"  class="form-control"><br>
+            <input type="text"  name="password" class="form-control"><br>
             <label>İliniz</label>
             <input type="text" name="city" class="form-control"><br>
             <label>Email</label>
             <input type="text" name="email" class="form-control"><br>
             <label>Hikayeniz</label>
-            <textarea value="Smith" rows="3" name="message" class="form-control">takılıp duru napsın
-            </textarea><br>
-         
-            <textarea value="Smith" rows="3" class="form-control">takılıp duru napsın
-            </textarea> <style> textarea.form-control{
 
-resize: vertical;  } </style><br>
-        
+            <textarea value="Smith" rows="3" class="form-control">takılıp duru napsın
+            </textarea> <style> textarea.form-control
+              {
+                resize: vertical;
+              } </style><br>
+
           	<div>
         	    <button class="btn btn-primary">Güncelle</button>
         	</div>
         </form>
-      </div>
-      <div class="tab-pane fade" id="profile">
-    	<form id="tab2"><br>
-        	<label>Yeni Parola</label>
-        	<input type="password" class="form-control"><br>
-        	<div>
-        	    <button class="btn btn-primary">Güncelle</button>
-        	</div>
-    	</form>
+
       </div>
   </div>
 </div>

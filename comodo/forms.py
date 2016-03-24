@@ -21,7 +21,7 @@ class RegistrationsForm(RegistrationForm):
 class MyUserProfileForm(forms.ModelForm):
     class Meta:
         model = MyUser
-        fields = ('username', 'password','email','city',)
+        fields = ('username',)
 
 
 
