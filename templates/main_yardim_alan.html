@@ -36,7 +36,7 @@
                     <ul class="dropdown-menu">
                         <li><a href="profilim.html">Profilim</a></li>
                         <li role="separator" class="divider"></li>
-                        <li><a href="#">Çıkış</a></li>
+                        <li><a href="{% url 'auth_logout' %}">Çıkış</a></li>
                     </ul>
                 </li>
             </ul>
@@ -49,78 +49,89 @@
     <div class="col-md-12">
         <div class="jumbotron">
             <div class="row">
-                <div class="col-md-4"><a href="{% url 'comodo:post_create' %}"
+                <div class="col-md-6"><a href="{% url 'comodo:post_create' %}"
                                          class="btn btn-success btn-lg btn-block" role="button">Hikayemi Ekle</a></div>
+                <div class="col-md-6"><a href="{% url 'comodo:user_material_list' %}"
+                                         class="btn btn-info btn-lg btn-block" role="button">Rezerve Ettiklerim</a></div>
                 {#                <div class="col-md-4"><a href="{% url 'comodo:reserved_items' %}" class="btn btn-info btn-lg btn-block"#}
                 {#                                         role="button">Rezerve Ettiklerim</a></div>#}
                 {#                <div class="col-md-4"><button data-toggle="collapse" data-target="#hikaye" class="btn btn-success btn-lg btn-block">Hikayemi Ekle</button></div>#}
-                <div class="col-md-4">
-                    <button data-toggle="collapse" data-target="#rezerve_edilen" class="btn btn-info btn-lg btn-block">
-                        Rezerve Ettiklerim
-                    </button>
-                </div>
-                <div class="col-md-4">
-                    <button data-toggle="collapse" data-target="#teslim_alinan"
-                            class="btn btn-warning btn-lg btn-block">Teslim Aldıklarım
-                    </button>
-                </div>
+{#                <div class="col-md-6">#}
+{#                    <button data-toggle="collapse" data-target="#rezerve_edilen" class="btn btn-info btn-lg btn-block">#}
+{#                        Rezerve Ettiklerim#}
+{#                    </button>#}
+{#                </div>#}
+{#                <div class="col-md-4">#}
+{#                    <button data-toggle="collapse" data-target="#teslim_alinan"#}
+{#                            class="btn btn-warning btn-lg btn-block">Teslim Aldıklarım#}
+{#                    </button>#}
+{#                </div>#}
 
                 {#                <div class="col-md-4"><a href="{% url 'comodo:given_items' %}"#}
                 {#                                         class="btn btn-warning btn-lg btn-block" role="button">Teslim Aldıklarım</a>#}
 
             </div>
 
-            <div class="collapse" id="rezerve_edilen">
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <th>Malzeme Adi</th>
-                        <th>Malzeme Sahibi</th>
-                        <th>Malzeme Sayfasi</th>
-                    </tr>
-                    </thead>
-                    {% for material in materialList %}
-                        {% if material.reserved_by == request.user and material.status == 1 %}
+            <div>
 
-                            <tbody>
-                            <tr class="success">
-                                <td class="text-primary">{{ material.material_name }}</td>
-                                <td class="text-primary">{{ material.user }}</td>
-                                <td><a href="{% url 'comodo:yardim_detail' material.id %}"
-                                       class="btn btn-danger btn-block"
-                                       role="button">Tikla</a></td>
-                            </tr>
-                            </tbody>
+                {% block reserved_items %}
+                {% endblock %}
+{#                <table class="table">#}
+{#                    <thead>#}
+{#                    <tr>#}
+{#                        <th>Malzeme Adi</th>#}
+{#                        <th>Malzeme Sahibi</th>#}
+{#                        <th>Malzeme Sayfasi</th>#}
+{#                        <th>Malzeme Teslim Alindiysa?</th>#}
+{#                    </tr>#}
+{#                    </thead>#}
+{#                    {% for material in materialList %}#}
+{#                        {% if material.reserved_by == request.user and material.status == 1 %}#}
+{##}
+{#                            <tbody>#}
+{#                            <tr class="success">#}
+{#                                <td class="text-primary">{{ material.material_name }}</td>#}
+{#                                <td class="text-primary">{{ material.user }}</td>#}
+{#                                <td><a href="{% url 'comodo:yardim_detail' material.id %}"#}
+{#                                       class="btn btn-danger btn-block"#}
+{#                                       role="button">Tikla</a></td>#}
+{#                                <td>#}
+{#                                    <form method="post" action="{% url 'comodo:material_status_given' material.id %}">{% csrf_token %}#}
+{##}
+{#                                        <a href="{% url 'comodo:yardim_detail' material.id %}" class="btn btn-danger btn-block" role="button" type="submit">Tikla</a>#}
+{#                                    </form></td>#}
+{#                            </tr>#}
+{#                            </tbody>#}
+{##}
+{#                        {% endif %}#}
+{#                    {% endfor %}#}
+{#                </table>#}
+{#            </div>#}
 
-                        {% endif %}
-                    {% endfor %}
-                </table>
-            </div>
-
-            <div class="collapse" id="teslim_alinan">
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <th>Teslim Alinan Malzeme Adi</th>
-                        <th>Malzeme Sahibi</th>
-                        <th>Malzeme Sayfasi</th>
-                    </tr>
-                    </thead>
-                    {% for material in materialList %}
-                        {% if material.given_to == request.user and material.status == 2 %}
-
-                            <tbody>
-                            <tr class="danger">
-                                <td class="text-primary">{{ material.material_name }}</td>
-                                <td class="text-primary">{{ material.user }}</td>
-                                <td><a href="{% url 'comodo:yardim_detail' material.id %}"
-                                       class="btn btn-danger btn-block"
-                                       role="button">Tikla</a></td>
-                            </tr>
-                            </tbody>
-                        {% endif %}
-                    {% endfor %}
-                </table>
+{#            <div class="collapse" id="teslim_alinan">#}
+{#                <table class="table">#}
+{#                    <thead>#}
+{#                    <tr>#}
+{#                        <th>Teslim Alinan Malzeme Adi</th>#}
+{#                        <th>Malzeme Sahibi</th>#}
+{#                        <th>Malzeme Sayfasi</th>#}
+{#                    </tr>#}
+{#                    </thead>#}
+{#                    {% for material in materialList %}#}
+{#                        {% if material.given_to == request.user and material.status == 2 %}#}
+{##}
+{#                            <tbody>#}
+{#                            <tr class="danger">#}
+{#                                <td class="text-primary">{{ material.material_name }}</td>#}
+{#                                <td class="text-primary">{{ material.user }}</td>#}
+{#                                <td><a href="{% url 'comodo:yardim_detail' material.id %}"#}
+{#                                       class="btn btn-danger btn-block"#}
+{#                                       role="button">Tikla</a></td>#}
+{#                            </tr>#}
+{#                            </tbody>#}
+{#                        {% endif %}#}
+{#                    {% endfor %}#}
+{#                </table>#}
             </div>
 
         </div>

@@ -30,7 +30,7 @@
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                       aria-expanded="false"><i class="fa fa-user"></i> &nbsp;Kullanici Adi <span class="caret"></span></a>
+                       aria-expanded="false"><i class="fa fa-user"></i> &nbsp;{{ request.user }} <span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="profilim.html">Profilim</a></li>
                         <li role="separator" class="divider"></li>
@@ -53,7 +53,8 @@
                     </div><!-- card image -->
 
                     <div class="card-content">
-                        <span class="card-title">{{ material.material_name }}</span>
+                        <span class="card-title">{{ material.material_name }}</span><br>
+                        <label for="malzeme" class="addlink">{{ material.user.get_full_name }}</label>
                         <button type="button" id="show" class="btn btn-custom pull-right" aria-label="Left Align">
                             Bilgi için tıklayınız
                         </button>

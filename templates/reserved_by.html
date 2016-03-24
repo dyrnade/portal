@@ -8,26 +8,34 @@
 <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
 {% block reserved_items %}
-    {% for material in reserved_materials %}
-        {% if material.reserved_by == request.user and material.status == 1 %}
-            <div class="container">
-                <table class="table">
+<table class="table">
                     <thead>
                     <tr>
                         <th>Malzeme Adi</th>
                         <th>Malzeme Sahibi</th>
                         <th>Malzeme Sayfasi</th>
+                        <th>Malzeme Teslim Alindiysa?</th>
                     </tr>
                     </thead>
-                    <tbody>
-                    <tr class="danger">
-                        <td class="text-primary">{{ material.material_name }}</td>
-                        <td class="text-primary">{{ material.user }}</td>
-                        <td><a href="{% url 'comodo:yardim_detail' material.id %}" class="btn btn-danger btn-block" role="button">Tikla</a></td>
-                    </tr>
-                    </tbody>
+                    {% for material in user_materialList %}
+                        {% if material.reserved_by == request.user and material.status == 1 %}
+
+                            <tbody>
+                            <tr class="success">
+                                <td class="text-primary">{{ material.material_name }}</td>
+                                <td class="text-primary">{{ material.user }}</td>
+                                <td><a href="{% url 'comodo:yardim_detail' material.id %}"
+                                       class="btn btn-warning btn-block"
+                                       role="button">Tikla</a></td>
+                                <td>
+                                    <form method="post" action="{% url 'comodo:material_status_given' material.id %}">{% csrf_token %}
+
+                                        <button type="submit" class="btn btn-danger btn-block">Sil</button>
+                                    </form></td>
+                            </tr>
+                            </tbody>
+
+                        {% endif %}
+                    {% endfor %}
                 </table>
-            </div>
-        {% endif %}
-    {% endfor %}
 {% endblock %}

@@ -20,6 +20,7 @@ urlpatterns = [
     url(r'^yardim/$', views.MaterialView.as_view(), name='yardim_sayfasi'),
     url(r'^yardim/(?P<pk>\d+)/$', views.MaterialDetailView.as_view(), name='yardim_detail'),
     url(r'^yardim/(?P<pk>\d+)/updated/$', views.MaterialStatusUpdateView.as_view(), name='material_status_update'),
+    url(r'^yardim/(?P<pk>\d+)/deleted/$', views.MaterialDeleteView.as_view(), name='material_status_given'),
     url(r'^register/$', views.register, name='register'),
     url(r'^accounts/login/$',
     auth_views.login,

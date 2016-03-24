@@ -57,10 +57,10 @@ class MaterialView(LoginRequiredMixin, VolunteerTestMixin,generic.ListView):
         return Material.objects.all()
 
 class UserMaterialView(LoginRequiredMixin,generic.ListView):
-    template_name = 'malzeme_listesi.html'
+    template_name = 'reserved_by.html'
     context_object_name = 'user_materialList'
     def get_queryset(self):
-        return Material.objects.all().prefetch_related('user')
+        return Material.objects.all()
 
 
 class MaterialDetailView(LoginRequiredMixin,generic.DetailView):
@@ -78,6 +78,21 @@ class MaterialStatusUpdateView(LoginRequiredMixin,generic.UpdateView):
         instance.reserved_by = self.request.user
         instance.save()
         return HttpResponseRedirect('/comodo/yardim/')
+
+
+class MaterialDeleteView(LoginRequiredMixin,generic.UpdateView):
+    model = Material
+    template_name = 'reversed_by.html'
+    fields = []
+
+    def form_valid(self,form):
+        instance = form.save(commit=False)
+        instance.status = 2
+        instance.reserved_by = self.request.user
+        instance.save()
+        return HttpResponseRedirect('/comodo/yardim/')
+
+
 
 def register(request):
     if request.method == "POST":

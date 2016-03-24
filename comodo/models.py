@@ -63,7 +63,7 @@ class MyUser(AbstractBaseUser):
     REQUIRED_FIELDS = ['city']
 
     def get_full_name(self):
-        return self.email
+        return self.username
 
     def get_short_name(self):
         return self.email
@@ -129,6 +129,6 @@ class Material(models.Model):
     material_image = models.ImageField()
     reserved_by = models.ForeignKey(settings.AUTH_USER_MODEL,blank=True,null=True,related_name='material_reserved_by')
     given_to = models.ForeignKey(settings.AUTH_USER_MODEL,blank=True,null=True,related_name='material_given_to')
-    ORDER_STATUS = ((0, 'not_rezerved'), (1, 'rezerved'), (2, 'given'))
+    ORDER_STATUS = ((0, 'not_rezerved'), (1, 'rezerved'), (2, 'given'),(3, 'izin_ver'))
     status = models.PositiveSmallIntegerField(choices=ORDER_STATUS)
 
