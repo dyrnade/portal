@@ -11,13 +11,13 @@
 <table class="table">
                     <thead>
                     <tr>
-                        <th>Malzeme Adi</th>
+                        <th>Teslim Alinan Malzeme Adi</th>
                         <th>Malzeme Sahibi</th>
                         <th>Malzeme Sayfasi</th>
                         <th>Malzeme Teslim Alindiysa?</th>
                     </tr>
                     </thead>
-                    {% for material in user_materialList %}
+                    {% for material in materialList %}
                         {% if material.reserved_by == request.user and material.status == 1 %}
 
                             <tbody>

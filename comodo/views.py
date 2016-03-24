@@ -57,7 +57,7 @@ class MaterialView(LoginRequiredMixin, VolunteerTestMixin,generic.ListView):
         return Material.objects.all()
 
 class UserMaterialView(LoginRequiredMixin,generic.ListView):
-    template_name = 'reserved_by.html'
+    template_name = 'malzeme_listesi.html'
     context_object_name = 'user_materialList'
     def get_queryset(self):
         return Material.objects.all()
@@ -169,7 +169,7 @@ class EditPostView(LoginRequiredMixin,generic.UpdateView):
 
 class ReservedItemsView(LoginRequiredMixin,generic.ListView):
     template_name = 'reserved_by.html'
-    context_object_name = 'reserved_materials'
+    context_object_name = 'materialList'
     model = Material
     def get_queryset(self):
         return Material.objects.all()
