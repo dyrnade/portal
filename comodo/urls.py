@@ -1,6 +1,7 @@
 from django.conf.urls import url
 from django.contrib.auth import views as auth_views
-
+from rest_framework.urlpatterns import format_suffix_patterns
+from . import serializers
 
 from . import views
 
@@ -51,4 +52,9 @@ url(r'^password/reset/done/$',
     auth_views.password_reset_done,
     name='password_reset_done'),
 
+url(r'^api_posts/$', views.ApiPostList.as_view()),
+url(r'^api_posts/(?P<pk>[0-9]+)/$', views.ApiPostDetail.as_view()),
+
 ]
+
+urlpatterns = format_suffix_patterns(urlpatterns)

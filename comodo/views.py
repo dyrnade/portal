@@ -10,6 +10,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.urlresolvers import reverse
 
+from comodo.serializers import PostSerializer
+from rest_framework import generics
+
 
 # Permissons
 
@@ -194,6 +197,15 @@ def redirecting(request):
         return HttpResponseRedirect('/comodo/')
     else:
         return HttpResponseRedirect('/comodo/yardim/')
+
+
+class ApiPostList(generics.ListAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+
+class ApiPostDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
 
 
 
