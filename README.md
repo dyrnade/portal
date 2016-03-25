@@ -13,6 +13,7 @@
 ## Mobil Android Admin Paneli Uygulamasi ##
 
 Admin olarak gonderilan yazilari onaylamanizi saglar.
+Web uygulamasi ile REST uzerinden haberlesme saglanir.
 
 - Kendi siteniz icin yapmaniz gerekenler
   - https://github.com/dyrnade/portal/blob/dev/SosyalYardimlasma/app/src/main/java/com/sosyalyardimlasma/adminpaneli/RESTClient.java
