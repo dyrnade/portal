@@ -18,15 +18,23 @@ urlpatterns = [
     url(r'^yardim/post_create/$', views.CreatePostView.as_view(), name='post_create'),
     url(r'^yardim/reserved/$', views.ReservedItemsView.as_view(), name='reserved_items'),
     url(r'^yardim/given_to/$', views.GivenItemsView.as_view(), name='given_items'),
+    url(r'^profile/$', views.ProfileListView.as_view(), name='user_profile'),
     url(r'^yardim/$', views.MaterialView.as_view(), name='yardim_sayfasi'),
     url(r'^yardim/(?P<pk>\d+)/$', views.MaterialDetailView.as_view(), name='yardim_detail'),
     url(r'^yardim/(?P<pk>\d+)/updated/$', views.MaterialStatusUpdateView.as_view(), name='material_status_update'),
     url(r'^yardim/(?P<pk>\d+)/deleted/$', views.MaterialDeleteView.as_view(), name='material_status_given'),
+
     url(r'^register/$', views.register, name='register'),
+
     url(r'^accounts/login/$',
     auth_views.login,
     {'template_name': 'kayit.html'},
     name='auth_login'),
+
+    url(r'^accounts/register/complete/$',
+    auth_views.login,
+    {'template_name': 'registration/registration_complete.html'},
+    name='registration_complete'),
 
     url(r'^redirecting/$', views.redirecting),
     url(r'^logout/$',

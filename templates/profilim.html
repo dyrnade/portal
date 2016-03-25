@@ -30,14 +30,19 @@
 	        <span class="icon-bar"></span>
 	        <span class="icon-bar"></span> 
 	      </button>
-	      <a class="navbar-brand" href="#">Yardım Sitesi</a>
+            {% if request.user.user_status == 1 %}
+	      <a class="navbar-brand" href="{% url 'comodo:index' %}">Yardım Sitesi</a>
+            {% else %}
+          <a class="navbar-brand" href="{% url 'comodo:yardim_sayfasi' %}">Yardım Sitesi</a>
+
+            {% endif %}
 	    </div>
 	    <div class="collapse navbar-collapse" id="myNavbar">
 	      	<ul class="nav navbar-nav navbar-right">
        			<li class="dropdown">
 			        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user"></i> &nbsp;{{ request.user }} <span class="caret"></span></a>
 			        <ul class="dropdown-menu">
-				        <li><a href="profilim.html">Profilim</a></li>
+				        <li><a href="{% url 'comodo:user_profile' %}">Profilim</a></li>
 				       
 				        <li role="separator" class="divider"></li>
 				        <li><a href="#">Çıkış</a></li>
@@ -58,13 +63,44 @@
     <div id="myTabContent" class="tab-content">
       <div class="tab-pane active in" id="home">
 
-        {% for info in profil_bilgisi %}
+{#        {% for info in profil_bilgisi %}#}
 
-            {% if info.city == request.user.city %}
-           <label>Kullanici Adi: </label><label>{{ info.username }}</label>
-            {% endif %}
+{#            {% if info.city == request.user.city %}#}
+    {% for myuser in myuser_list %}
+        {% if myuser.id == request.user.id %}
+                    <h4 style="color: #1b6d85;">Kullanici Adi: </h4>
+                    <p>{{ myuser.username }}</p>
 
-        {% endfor %}
+                    <hr>
+                    <h4>Email: </h4>
+                    <p>{{ myuser.email }}</p>
+
+                    <hr>
+                    <h4>Yasadigi Sehir: </h4>
+                    <p>{{ myuser.city }}</p>
+
+                    <hr>
+                    <h4>Email: </h4>
+                    <p>{{ myuser.email }}</p>
+
+                    <hr>
+
+                    {% if myuser.user_status == 2 %}
+
+                        <h4>Mesajiniz : </h4>
+                    <p>{{ myuser.post.message }}</p>
+
+                    <hr>
+
+                        {% endif %}
+
+        {% endif %}
+
+          {% endfor %}
+
+{#            {% endif %}#}
+
+{#        {% endfor %}#}
 
       </div>
       <div class="tab-pane fade" id="profile">

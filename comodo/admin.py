@@ -8,7 +8,7 @@ from django.contrib.auth.models import Group, User
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
-from .models import MyUser,PostConfirmation,Material
+from .models import MyUser,Comment,Material
 
 
 class UserCreationForm(forms.ModelForm):
@@ -92,4 +92,5 @@ admin.site.unregister(Group)
 
 admin.site.register(Post)
 admin.site.register(Material)
+admin.site.register(Comment)
 

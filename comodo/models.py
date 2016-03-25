@@ -3,6 +3,8 @@ from __future__ import unicode_literals
 from django.db import models
 from django.contrib.auth.models import User,BaseUserManager,AbstractBaseUser
 from django.conf import settings
+from django.utils import timezone
+
 
 # Create your models here.
 
@@ -135,4 +137,20 @@ class Material(models.Model):
     given_to = models.ForeignKey(settings.AUTH_USER_MODEL,blank=True,null=True,related_name='material_given_to')
     ORDER_STATUS = ((0, 'not_rezerved'), (1, 'rezerved'), (2, 'given'),(3, 'izin_ver'))
     status = models.PositiveSmallIntegerField(choices=ORDER_STATUS)
+
+    def __unicode__(self):
+        return self.material_name
+
+    def __str__(self):
+        return self.material_name
+
+
+class Comment(models.Model):
+    post = models.ForeignKey(Material, related_name='comments')
+    author = models.CharField(max_length=200)
+    text = models.TextField()
+    created_date = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return self.text
 

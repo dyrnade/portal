@@ -4,9 +4,10 @@ from django import forms
 
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, ButtonHolder, Submit, Div
-from .models import MyUser, Post,PostConfirmation, Material
+from .models import MyUser, Post, Comment, Material
 from registration.forms import RegistrationForm
 from django.contrib.auth.forms import AuthenticationForm
+from django_comments.forms import CommentForm, CommentDetailsForm
 
 class RegistrationsForm(RegistrationForm):
 
@@ -76,3 +77,21 @@ class EditPostForm(forms.ModelForm):
                 Submit('post_edit', 'Done', css_class='btn-success')
             )
         )
+
+
+# class CommentForms(CommentForm):
+#     class Meta:
+#         model = Comment
+#         fields = ('author', 'text',)
+
+    # def __init__(self, *args, **kwargs):
+    #     super(CommentForm, self).__init__(*args, **kwargs)
+    #
+    #     self.helper = FormHelper()
+    #     self.helper.layout = Layout(
+    #         'author',
+    #         'text',
+    #         ButtonHolder(
+    #             Submit('post_edit', 'Done', css_class='btn-success')
+    #         )
+    #     )

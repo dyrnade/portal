@@ -5,12 +5,29 @@
 {% block content %}
     {% if user.is_authenticated and user.user_status == 1 %}
 
-    <div class="col-sm-8">
-        <h1>{{ post.message }}</h1>
-        <br>
-    <p>{% trans "Edit Post" %}? <a href="{% url 'comodo:post_edit' post.id %}">{% trans "Edit" %}</a>!</p>
-    </div>
-        {% else %}
+        <!-- Page Content -->
+        <div class="container">
+
+            <div class="row">
+
+                <div class="col-lg-8">
+
+                    <h1>{{ post.title }}</h1>
+
+                    <p class="lead">
+                        Bu yazi <a href="#">{{ post.user }}</a> tarafindan, <span class="glyphicon glyphicon-time"></span> {{ post.release_date }} tarihinde yayinlanmistir.</p>
+
+                    <hr>
+
+                    <p>{{ post.message|linebreaks }}</p>
+
+                    <hr>
+                </div>
+            </div>
+        </div>
+    {% else %}
         <p>Bu alani gorme yetkiniz yok...</p>
     {% endif %}
+
+
 {% endblock %}

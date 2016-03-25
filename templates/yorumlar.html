@@ -1,0 +1,43 @@
+{% load staticfiles %}
+{% load i18n %}
+{% load comments %}
+
+{% block yorumlar %}
+{% render_comment_list for entry %}
+<div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="page-header">
+                    <h1>
+                        <small class="pull-right">2 Yorum</small>
+                        Yorumlar
+                    </h1>
+                </div>
+                <div class="comments-list">
+                    {% for comment in comment_list %}
+
+                    <div class="media">
+                        <p class="pull-right">
+                            <small>5 days ago</small>
+                        </p>
+                        <a class="media-left" href="#">
+                            <img src="#" style="width: 40px; height: 40px;">
+                        </a>
+                        <div class="media-body">
+
+                            <h4 class="media-heading user_name">{{ comment.username }} </h4>
+                            {{ comment.text }}
+
+                            <p>
+                                <small><a href="">Beğen</a></small>
+                            </p>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                </div>
+                </div>
+            </div>
+        </div>
+
+{% endblock %}

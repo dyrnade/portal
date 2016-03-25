@@ -1,0 +1,35 @@
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+{% load i18n %}
+{% load comments %}
+
+{% get_comment_form for event as form %}
+
+
+{% block yorum_form %}
+        <div class="col-md-5 col-md-offset-1">
+            <div class="container">
+                <div>
+                    <br style="clear:both">
+                    <div class="form-group col-md-4 ">
+                        <label id="messageLabel" for="message">Yorumunuz: </label>
+                    <textarea name="text" class="form-control input-sm " type="textarea"
+                              placeholder="Yorumunuzu yazınız." maxlength="140" rows="7"></textarea>
+                    <span class="help-block"><p id="characterLeft" class="help-block ">Karakter limitini
+                        doldurdunuz.</p></span>
+                    </div>
+{#                    {% crispy form %}#}
+                    <br style="clear:both">
+                    <div class="form-group col-md-2">
+                    <form action="{% comment_form_target %}" method="post">{% csrf_token %}
+                            {{ form }}
+                        <button class="form-control input-sm btn btn-success disabled" id="btnSubmit" name="btnSubmit"
+                                type="submit" style="height:35px"> Paylaş
+                        </button>
+                         </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+{% endblock %}

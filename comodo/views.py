@@ -1,17 +1,17 @@
 from __future__ import absolute_import
 from django.shortcuts import render
 from django.views import generic
-from .models import Post, Material, MyUser
-from .forms import RegistrationsForm, EditPostForm, CreatePostForm, LoginForm, MyUserProfileForm, CreateMaterialForm
+from .models import Post, Material, MyUser, Comment
+from .forms import RegistrationsForm, EditPostForm, CreatePostForm, CreateMaterialForm, CommentForm
 from django.http import HttpResponseRedirect,HttpResponse, Http404
-from django.contrib.auth import authenticate, login
-from django.core.urlresolvers import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.messages.views import SuccessMessageMixin
+from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 
 from comodo.serializers import PostSerializer
 from rest_framework import generics
+from django.contrib import messages
 
 
 # Permissons
@@ -32,7 +32,7 @@ class RecipantTestMixin(UserPassesTestMixin):
         else:
             return True
 
-class IndexView(LoginRequiredMixin, RecipantTestMixin, generic.ListView):
+class IndexView(SuccessMessageMixin,LoginRequiredMixin, RecipantTestMixin, generic.ListView):
     template_name = 'index.html'
     context_object_name = 'postList'
     paginate_by = 4
@@ -44,7 +44,7 @@ class DetailView(LoginRequiredMixin,generic.DetailView):
     model = Post
     template_name = 'detail.html'
 
-class MaterialView(LoginRequiredMixin, VolunteerTestMixin,generic.ListView):
+class MaterialView(LoginRequiredMixin,SuccessMessageMixin, VolunteerTestMixin,generic.ListView):
     template_name = 'main_yardim_alan.html'
     context_object_name = 'materialList'
     paginate_by = 10
@@ -69,6 +69,9 @@ class UserMaterialView(LoginRequiredMixin,generic.ListView):
 class MaterialDetailView(LoginRequiredMixin,generic.DetailView):
     model = Material
     template_name = 'malzeme.html'
+
+    def get_queryset(self):
+        return super(MaterialDetailView, self).get_queryset().prefetch_related('comments')
 
 class MaterialStatusUpdateView(LoginRequiredMixin,generic.UpdateView):
     model = Material
@@ -98,12 +101,14 @@ class MaterialDeleteView(LoginRequiredMixin,generic.UpdateView):
 
 
 def register(request):
+    url = reverse('comodo:registration_complete')
     if request.method == "POST":
         form = RegistrationsForm(request.POST)  # filled form/i'm skipping validation for this example
         if form.is_valid():
             form.save(commit=True)
             print("Form is valid")
         else:
+            messages.add_message(request, 25, 'A serious error occurred.')
             return HttpResponse(str((form.errors)))
         return HttpResponseRedirect('/comodo/register/')  # go to some other page if successfully saved
     else:
@@ -165,7 +170,7 @@ def upload_file(request):
         form = CreateMaterialForm()
     return render(request, 'material_create.html', {'form': form})
 
-class EditPostView(LoginRequiredMixin,generic.UpdateView):
+class EditPostView(LoginRequiredMixin,SuccessMessageMixin,generic.UpdateView):
     form_class = EditPostForm
     model = Post
     template_name = 'post_edit.html'
@@ -184,12 +189,26 @@ class GivenItemsView(LoginRequiredMixin,generic.ListView):
     def get_queryset(self):
         return Material.objects.all()
 
-class ProfileView(LoginRequiredMixin,generic.ListView):
+class ProfileListView(LoginRequiredMixin, generic.ListView):
     template_name = 'profilim.html'
-    context_object_name = 'profil_bilgisi'
     model = MyUser
-    def get_queryset(self):
-        return MyUser.objects.all()
+    fields = []
+
+    def form_valid(self, form):
+        instance = form.save(commit=False)
+        instance.user = self.request.user
+        instance.save()
+        return instance
+
+    # def get_queryset(self):
+    #     return MyUser.objects.all().prefetch_related('user')
+
+# class ProfileDetailView(LoginRequiredMixin,generic.DetailView):
+#     template_name = 'profilim.html'
+#     # context_object_name = 'profil_bilgisi'
+#     model = MyUser
+#     # def get_queryset(self):
+#     #     return MyUser.objects.all()
 
 @login_required
 def redirecting(request):
@@ -206,6 +225,21 @@ class ApiPostList(generics.ListAPIView):
 class ApiPostDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
+
+# class CommentSendView(generic.CreateView):
+#     template_name = 'yorum_yap.html'
+#     model = Comment
+#     form_class = CommentForm
+#
+#     def form_valid(self, form):
+#         instance = form.save(commit=False)
+#         instance.author = self.request.user
+#         instance.save()
+#         return HttpResponseRedirect('comodo:yardim_sayfasi')
+#
+# class CommentShowView(generic.DetailView):
+#     template_name = 'yorumlar.html'
+#     model = Comment
 
 
 

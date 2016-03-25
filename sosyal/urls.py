@@ -42,9 +42,10 @@ admin.autodiscover()
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^comodo/', include('comodo.urls', namespace='comodo')),
-    url(r'^accounts/', include('registration.backends.default.urls')),
+    url(r'^accounts/', include('registration.backends.simple.urls')),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api/',include(router.urls, namespace='ruls')),
+    url(r'^comments/', include('django_comments.urls')),
 
 ]
 

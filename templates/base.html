@@ -42,7 +42,12 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">Yardım Sitesi</a>
+            {% if request.user.user_status == 1 %}
+	      <a class="navbar-brand" href="{% url 'comodo:index' %}">Yardım Sitesi</a>
+            {% else %}
+          <a class="navbar-brand" href="{% url 'comodo:yardim_sayfasi' %}">Yardım Sitesi</a>
+
+            {% endif %}
         </div>
         <div class="collapse navbar-collapse" id="myNavbar">
             <ul class="nav navbar-nav navbar-right">
@@ -50,8 +55,7 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                        aria-expanded="false"><i class="fa fa-user"></i> &nbsp;{{ request.user }} <span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="profilim.html">Profilim</a></li>
-
+                            <li><a href="{% url 'comodo:user_profile' %}">Profilim</a></li>
                         <li role="separator" class="divider"></li>
                         <li><a href="{% url 'comodo:auth_logout' %}">Çıkış</a></li>
                     </ul>

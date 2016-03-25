@@ -1,6 +1,8 @@
 <!-- Yardım Gönüllüsü main sayfasıdır-->
 {% load staticfiles %}
 {% load i18n %}
+{% load comments %}
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -24,17 +26,22 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">Yardım Sitesi</a>
-        </div>
+            {% if request.user.user_status == 1 %}
+                <a class="navbar-brand" href="{% url 'comodo:index' %}">Yardım Sitesi</a>
+            {% else %}
+                <a class="navbar-brand" href="{% url 'comodo:yardim_sayfasi' %}">Yardım Sitesi</a>
+
+            {% endif %}        </div>
         <div class="collapse navbar-collapse" id="myNavbar">
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                       aria-expanded="false"><i class="fa fa-user"></i> &nbsp;{{ request.user }} <span class="caret"></span></a>
+                       aria-expanded="false"><i class="fa fa-user"></i> &nbsp;{{ request.user }} <span
+                            class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="profilim.html">Profilim</a></li>
+                        <li><a href="{% url 'comodo:user_profile' %}">Profilim</a></li>
                         <li role="separator" class="divider"></li>
-                        <li><a href="#">Çıkış</a></li>
+                        <li><a href="{% url 'auth_logout' %}">Çıkış</a></li>
                     </ul>
                 </li>
             </ul>
@@ -64,7 +71,7 @@
                         <span class="card-title">Malzeme Hakkında</span>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                 aria-hidden="true">×</span></button>
-                        <p>{{ material.material_message }}</p><br>
+                        <p>{{ material.material_message|linebreaks }}</p><br>
                     </div>
 
                 </div>
@@ -72,11 +79,11 @@
                 {#                <button type="submit" class="btn btn-success btn-lg btn-block">Rezerve Et</button>#}
 
                 <!--Rezerve edilmemisse buton aktif -->
-                {% if material.status == 0 and material.user.city == request.user.city and request.user.user_status == 2%}
+                {% if material.status == 0 and material.user.city == request.user.city and request.user.user_status == 2 %}
 
                     <button type="submit" class="btn btn-success active btn-lg  btn-block">Rezerve Et</button>
                     <!-- Rezerve edilmisse buton pasif -->
-                {% elif  material.status == 1 and material.user.city == request.user.city and request.user.user_status == 2%}
+                {% elif  material.status == 1 and material.user.city == request.user.city and request.user.user_status == 2 %}
                     <button type="button" class="btn btn-primary disabled btn-lg  btn-block">Rezerve Edildi
                     </button>
                 {% else %}
@@ -85,110 +92,111 @@
             </div>
         </form>
 
+        <!-- Yorum yapma kismi-->
+        {% get_comment_form for material as form %}
         <div class="col-md-5 col-md-offset-1">
             <div class="container">
                 <div>
                     <br style="clear:both">
                     <div class="form-group col-md-4 ">
                         <label id="messageLabel" for="message">Yorumunuz: </label>
-                    <textarea class="form-control input-sm " type="textarea" id="message"
-                              placeholder="Yorumunuzu yazınız." maxlength="140" rows="7"></textarea>
-                    <span class="help-block"><p id="characterLeft" class="help-block ">Karakter limitini
-                        doldurdunuz.</p></span>
                     </div>
+                    {#                    {% crispy form %}#}
                     <br style="clear:both">
                     <div class="form-group col-md-2">
-                        <button class="form-control input-sm btn btn-success disabled" id="btnSubmit" name="btnSubmit"
-                                type="button" style="height:35px"> Paylaş
-                        </button>
+
+                        <form action="{% comment_form_target %}" method="post">{% csrf_token %}
+                            {{ form }}
+
+                            <button class="form-control input-sm btn btn-success disabled" id="btnSubmit"
+                                    name="btnSubmit"
+                                    type="submit" style="height:35px"> Paylaş
+                            </button>
+                            <input type="hidden" name="next" value="{% url 'comodo:yardim_detail' material.id %}"/>
+                        </form>
+
                     </div>
                 </div>
             </div>
         </div>
 
+
     </div>
+
+    <!-- Yorumlar  kismi -->
+
 
     <div class="container">
         <div class="row">
             <div class="col-md-6">
                 <div class="page-header">
                     <h1>
-                        <small class="pull-right">2 Yorum</small>
+                        {% get_comment_count for material as comment_count %}
+
+                        <small class="pull-right">{{ comment_count }} Yorum</small>
                         Yorumlar
                     </h1>
                 </div>
-                <div class="comments-list">
-                    <div class="media">
-                        <p class="pull-right">
-                            <small>5 days ago</small>
-                        </p>
-                        <a class="media-left" href="#">
-                            <img src="#" style="width: 40px; height: 40px;">
-                        </a>
-                        <div class="media-body">
+                {% render_comment_list for material %}
 
-                            <h4 class="media-heading user_name">Kullanici adi </h4>
-                            aman tanrım nasıl bir ürün bilemezsin
+                {% for comment in comment_list %}
 
-                            <p>
-                                <small><a href="">Beğen</a></small>
+                    <div class="comments-list">
+
+                        <div class="media">
+                            <p class="pull-right">
+                                <small>5 days ago</small>
                             </p>
+                            <a class="media-left" href="#">
+                                <img src="#" style="width: 40px; height: 40px;">
+                            </a>
+                            <div class="media-body">
+
+                                <h4 class="media-heading user_name"> {{ comment.username }} </h4>
+                                {{ comment.text }}
+                            </div>
                         </div>
+
                     </div>
+                {% endfor %}
 
-                    <div class="media">
-                        <p class="pull-right">
-                            <small>5 days ago</small>
-                        </p>
-                        <a class="media-left" href="#">
-                            <img src="#" style="width: 40px; height: 40px;">
-                        </a>
-                        <div class="media-body">
-
-                            <h4 class="media-heading user_name">Kullanici adi </h4>
-                            aman tanrım nasıl bir ürün bilemezsin
-
-                            <p>
-                                <small><a href="">Beğen</a></small>
-                            </p>
-                        </div>
-                    </div>
-
-                </div>
+            </div>
+        </div>
+    </div>
 
 
-                <script type="text/javascript">
-                    $(function () {
+    <script type="text/javascript">
+        $(function () {
 
-                        $('#show').on('click', function () {
-                            $('.card-reveal').slideToggle('slow');
-                        });
+            $('#show').on('click', function () {
+                $('.card-reveal').slideToggle('slow');
+            });
 
-                        $('.card-reveal .close').on('click', function () {
-                            $('.card-reveal').slideToggle('slow');
-                        });
-                    });
+            $('.card-reveal .close').on('click', function () {
+                $('.card-reveal').slideToggle('slow');
+            });
+        });
 
 
-                    $(document).ready(function () {
-                        $('#characterLeft').text('140 karakter kaldı.');
-                        $('#message').keyup(function () {
-                            var max = 140;
-                            var len = $(this).val().length;
-                            if (len >= max) {
-                                $('#characterLeft').text('Karakter limitini doldurdunuz.');
-                                $('#characterLeft').addClass('red');
-                                $('#btnSubmit').addClass('disabled');
-                            }
-                            else {
-                                var ch = max - len;
-                                $('#characterLeft').text(ch + ' karakter kaldı.');
-                                $('#btnSubmit').removeClass('disabled');
-                                $('#characterLeft').removeClass('red');
-                            }
-                        });
-                    });
-                </script>
+        $(document).ready(function () {
+            $('#characterLeft').text('140 karakter kaldı.');
+            $('#message').keyup(function () {
+                var max = 140;
+                var len = $(this).val().length;
+                if (len >= max) {
+                    $('#characterLeft').text('Karakter limitini doldurdunuz.');
+                    $('#characterLeft').addClass('red');
+                    $('#btnSubmit').addClass('disabled');
+                }
+                else {
+                    var ch = max - len;
+                    $('#characterLeft').text(ch + ' karakter kaldı.');
+                    $('#btnSubmit').removeClass('disabled');
+                    $('#characterLeft').removeClass('red');
+                }
+            });
+        });
+    </script>
 
 </body>
 </html>
