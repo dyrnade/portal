@@ -1,0 +1,12 @@
+# TURKEN-COMODO SOSYAL YARDIMLASMA PLATFORMU UYGULAMASI #
+
+## Web Uygulamasi ##
+### Uygulama Bagimliklari ###
+
+- Django 1.9.4
+- django-contrib-comments 1.6.2
+- django-crispy-forms 1.6.0
+- django-registration-redux 1.4
+- djangorestframework 3.3.3
+- Pillow 3.1.1
+
