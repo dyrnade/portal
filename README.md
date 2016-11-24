@@ -1,5 +1,5 @@
 # Social Sharing Platform #
-## This project was for Comodo Programmming Contest ## 
+## This project was for Comodo Programming Contest ## 
 ### Dependencies ###
 
 - Django 1.9.4
