@@ -1,9 +1,6 @@
-# TURKEN-COMODO SOSYAL YARDIMLASMA PLATFORMU UYGULAMASI #
-
-## Live Demo :   http://46.101.136.222/comodo/ ##
-
-## Web Uygulamasi ##
-### Uygulama Bagimliklari ###
+# Social Sharing Platform #
+## This project was for Comodo Programmming Contest ## 
+### Dependencies ###
 
 - Django 1.9.4
 - django-contrib-comments 1.6.2
@@ -12,13 +9,13 @@
 - djangorestframework 3.3.3
 - Pillow 3.1.1
 
-## Mobil Android Admin Paneli Uygulamasi ##
+## Admin panel is an Android Application ##
 
-Admin olarak gonderilan yazilari onaylamanizi saglar.
-Web uygulamasi ile REST uzerinden haberlesme saglanir.
+It allows you to accept articles.
+Django Rest Api is used for communication between django and android.
 
-- Kendi siteniz icin yapmaniz gerekenler
-  - https://github.com/dyrnade/portal/blob/dev/SosyalYardimlasma/app/src/main/java/com/sosyalyardimlasma/adminpaneli/RESTClient.java
-  - Bu dosyayi text editorde acin.Asagidaki satirlarda username ve password degistirin.
+- Before building admin panel, below steps are need to be done
+  - Open this with your favorite text editor. https://github.com/dyrnade/portal/blob/dev/SosyalYardimlasma/app/src/main/java/com/sosyalyardimlasma/adminpaneli/RESTClient.java
+  - Change these fields with yours.
   - private static final String username = "admin_username";
   - private static final String password = "admin_password";
